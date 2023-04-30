@@ -1278,6 +1278,7 @@
           'sources': [
             '<(V8_ROOT)/src/base/debug/stack_trace_win.cc',
             '<(V8_ROOT)/src/base/platform/platform-win32.cc',
+            '<(V8_ROOT)/src/base/platform/platform-win32.h',
             '<(V8_ROOT)/src/base/win32-headers.h',
           ],
           'defines': ['_CRT_RAND_S'], # for rand_s()
