@@ -7,6 +7,7 @@
 
 #include "src/maglev/maglev-compilation-info.h"
 #include "src/maglev/maglev-graph-labeller.h"
+#include "src/maglev/maglev-graph-processor.h"
 #include "src/maglev/maglev-ir.h"
 
 namespace v8 {
@@ -27,11 +28,15 @@ class MaglevGraphVerifier {
 
   void PreProcessGraph(Graph* graph) {}
   void PostProcessGraph(Graph* graph) {}
-  void PreProcessBasicBlock(BasicBlock* block) {}
+  BlockProcessResult PreProcessBasicBlock(BasicBlock* block) {
+    return BlockProcessResult::kContinue;
+  }
+  void PostPhiProcessing() {}
 
   template <typename NodeT>
-  void Process(NodeT* node, const ProcessingState& state) {
+  ProcessResult Process(NodeT* node, const ProcessingState& state) {
     node->VerifyInputs(graph_labeller_);
+    return ProcessResult::kContinue;
   }
 
  private:

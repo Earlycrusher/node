@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <algorithm>
 #include <atomic>
 #include <vector>
 
@@ -57,6 +58,7 @@ namespace internal {
   V(CustomCallbacksProcessing)              \
   V(SweepFinishIfOutOfWork)                 \
   V(SweepInvokePreFinalizers)               \
+  V(SweepInIdleTask)                        \
   V(SweepInTask)                            \
   V(SweepInTaskForStatistics)               \
   V(SweepOnAllocation)                      \

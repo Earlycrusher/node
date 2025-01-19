@@ -152,18 +152,18 @@ void BindingData::Deserialize(Local<Context> context,
                               Local<Object> holder,
                               int index,
                               InternalFieldInfoBase* info) {
-  DCHECK_EQ(index, BaseObject::kEmbedderType);
+  DCHECK_IS_SNAPSHOT_SLOT(index);
   HandleScope scope(context->GetIsolate());
   Realm* realm = Realm::GetCurrent(context);
   // Recreate the buffer in the constructor.
   InternalFieldInfo* casted_info = static_cast<InternalFieldInfo*>(info);
   BindingData* binding =
-      realm->AddBindingData<BindingData>(context, holder, casted_info);
+      realm->AddBindingData<BindingData>(holder, casted_info);
   CHECK_NOT_NULL(binding);
 }
 
 InternalFieldInfoBase* BindingData::Serialize(int index) {
-  DCHECK_EQ(index, BaseObject::kEmbedderType);
+  DCHECK_IS_SNAPSHOT_SLOT(index);
   InternalFieldInfo* info = internal_field_info_;
   internal_field_info_ = nullptr;
   return info;
@@ -369,7 +369,7 @@ void GCProfiler::New(const FunctionCallbackInfo<Value>& args) {
 void GCProfiler::Start(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
   GCProfiler* profiler;
-  ASSIGN_OR_RETURN_UNWRAP(&profiler, args.Holder());
+  ASSIGN_OR_RETURN_UNWRAP(&profiler, args.This());
   if (profiler->state != GCProfiler::GCProfilerState::kInitialized) {
     return;
   }
@@ -394,7 +394,7 @@ void GCProfiler::Start(const FunctionCallbackInfo<Value>& args) {
 void GCProfiler::Stop(const FunctionCallbackInfo<v8::Value>& args) {
   Environment* env = Environment::GetCurrent(args);
   GCProfiler* profiler;
-  ASSIGN_OR_RETURN_UNWRAP(&profiler, args.Holder());
+  ASSIGN_OR_RETURN_UNWRAP(&profiler, args.This());
   if (profiler->state != GCProfiler::GCProfilerState::kStarted) {
     return;
   }
@@ -422,8 +422,7 @@ void Initialize(Local<Object> target,
                 void* priv) {
   Realm* realm = Realm::GetCurrent(context);
   Environment* env = realm->env();
-  BindingData* const binding_data =
-      realm->AddBindingData<BindingData>(context, target);
+  BindingData* const binding_data = realm->AddBindingData<BindingData>(target);
   if (binding_data == nullptr) return;
 
   SetMethodNoSideEffect(

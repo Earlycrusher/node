@@ -1,4 +1,4 @@
-// Flags: --experimental-permission --allow-fs-read=* --allow-child-process
+// Flags: --permission --allow-fs-read=* --allow-child-process
 'use strict';
 
 const common = require('../common');
@@ -8,11 +8,11 @@ const assert = require('assert');
 const { spawnSync } = require('child_process');
 
 {
-  // Relative path as CLI args are NOT supported yet
+  // Relative path as CLI args are supported
   const { status, stdout } = spawnSync(
     process.execPath,
     [
-      '--experimental-permission',
+      '--permission',
       '--allow-fs-read', '*',
       '--allow-fs-write', '../fixtures/permission/deny/regular-file.md',
       '-e',
@@ -25,6 +25,6 @@ const { spawnSync } = require('child_process');
   );
 
   const [fsWrite] = stdout.toString().split('\n');
-  assert.strictEqual(fsWrite, 'false');
+  assert.strictEqual(fsWrite, 'true');
   assert.strictEqual(status, 0);
 }

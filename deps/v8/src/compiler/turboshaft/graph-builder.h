@@ -5,6 +5,8 @@
 #ifndef V8_COMPILER_TURBOSHAFT_GRAPH_BUILDER_H_
 #define V8_COMPILER_TURBOSHAFT_GRAPH_BUILDER_H_
 
+#include <optional>
+
 #include "src/codegen/bailout-reason.h"
 #include "src/compiler/node-origin-table.h"
 #include "src/compiler/turboshaft/graph.h"
@@ -14,12 +16,9 @@ class Schedule;
 class SourcePositionTable;
 }
 namespace v8::internal::compiler::turboshaft {
-base::Optional<BailoutReason> BuildGraph(JSHeapBroker* broker,
-                                         Schedule* schedule, Isolate* isolate,
-                                         Zone* graph_zone, Zone* phase_zone,
-                                         Graph* graph, Linkage* linkage,
-                                         SourcePositionTable* source_positions,
-                                         NodeOriginTable* origins);
+class PipelineData;
+std::optional<BailoutReason> BuildGraph(PipelineData* data, Schedule* schedule,
+                                        Zone* phase_zone, Linkage* linkage);
 }
 
 #endif  // V8_COMPILER_TURBOSHAFT_GRAPH_BUILDER_H_
